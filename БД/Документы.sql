@@ -1,0 +1,8 @@
+CREATE TABLE Documents (
+	ID INT PRIMARY KEY,
+	creator VARCHAR(50) NOT NULL,
+	surname VARCHAR(50) NOT NULL,
+	Name VARCHAR(50) NOT NULL,
+	Middle_name VARCHAR(50) NULL,
+	Creation_date DATE NOT NULL
+);

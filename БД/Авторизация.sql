@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS User_credentials (
+    ID SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL UNIQUE,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (employee_id) REFERENCES Employees(ID) ON DELETE CASCADE
+);

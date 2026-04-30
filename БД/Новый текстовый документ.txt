@@ -1,0 +1,111 @@
+CREATE TABLE IF NOT EXISTS User_credentials (
+    ID SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL UNIQUE,
+    login VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (employee_id) REFERENCES Employees(ID) ON DELETE CASCADE
+);
+
+CREATE TABLE Client (
+	ID INT PRIMARY KEY,
+	surname VARCHAR(50) NOT NULL,
+	name VARCHAR(50) NOT NULL,
+	middle_name VARCHAR(50),
+	company_name VARCHAR(50),
+	email VARCHAR(50),
+	phone_number VARCHAR(20),
+	rental_history VARCHAR(500),
+	service_history VARCHAR(500),
+	equipment_id INT,
+	lease_agreement_id INT,
+	FOREIGN KEY (equipment_id) REFERENCES Equipment(id),
+	FOREIGN KEY (lease_agreement_id) REFERENCES Lease_agreement(id)
+);
+
+CREATE TABLE Lease_agreement (
+	ID INT PRIMARY KEY,
+	conditions VARCHAR(50) NOT NULL,
+	start_date DATE NOT NULL,
+	end_date DATE NOT NULL,
+	price DECIMAL(10, 2) DEFAULT 0.00,
+	characteristics VARCHAR(500),
+	technical_service_features VARCHAR(5000),
+	payment_id INT,
+	FOREIGN KEY (payment_id) REFERENCES Payment(id)
+);
+
+CREATE TABLE Documents (
+	ID INT PRIMARY KEY,
+	creator VARCHAR(50) NOT NULL,
+	surname VARCHAR(50) NOT NULL,
+	Name VARCHAR(50) NOT NULL,
+	Middle_name VARCHAR(50) NULL,
+	Creation_date DATE NOT NULL
+);
+
+CREATE TABLE Rental_application (
+	ID INT PRIMARY KEY,
+	client_id INT,
+	employees_id INT,
+	FOREIGN KEY (client_id) REFERENCES Client(id),
+	FOREIGN KEY (employees_id) REFERENCES Employees(id),
+	information_the_equipment VARCHAR(500),
+	date_of_creation DATE NOT NULL,
+	closing_date DATE NOT NULL,
+	status_id INT,
+	FOREIGN KEY (status_id) REFERENCES Status(id)
+);
+
+CREATE TABLE Request_for_service (
+	ID INT PRIMARY KEY,
+	client_id INT,
+	employees_id INT,
+	FOREIGN KEY (client_id) REFERENCES Client(id),
+	FOREIGN KEY (employees_id) REFERENCES Employees(id),
+	malfunction_information VARCHAR(500),
+	date_of_creation DATE NOT NULL,
+	closing_date DATE NOT NULL,
+	status_id INT,
+	FOREIGN KEY (status_ID) REFERENCES Status(id)
+);
+
+CREATE TABLE Equipment (
+	ID INT PRIMARY KEY,
+	manufacturer VARCHAR(50),
+	model VARCHAR(50),
+	characteristics VARCHAR(500),
+	state VARCHAR(50),
+	price DECIMAL(10, 2) DEFAULT 0.00,
+	service_date DATE
+);
+
+CREATE TABLE Equipment (
+	ID INT PRIMARY KEY,
+	manufacturer VARCHAR(50),
+	model VARCHAR(50),
+	characteristics VARCHAR(500),
+	state VARCHAR(50),
+	price DECIMAL(10, 2) DEFAULT 0.00,
+	service_date DATE
+);
+
+CREATE TABLE Employees (
+	ID INT PRIMARY KEY,
+	surname VARCHAR(50) NOT NULL,
+	name VARCHAR(50) NOT NULL,
+	middle_name VARCHAR(50) NULL,
+	job_title VARCHAR(50) NOT NULL,
+	mail VARCHAR(50) NOT NULL,
+	phone_number VARCHAR(50) NOT NULL,
+	document_id INT,
+	FOREIGN KEY (document_id) REFERENCES Documents(id)
+);
+
+CREATE TYPE status_type AS ENUM ('ready', 'at_work', 'awaiting', 'cancelled');
+
+CREATE TABLE Status (
+    ID INT PRIMARY KEY,
+    status status_type NOT NULL DEFAULT 'awaiting'
+);
